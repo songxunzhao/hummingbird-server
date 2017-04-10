@@ -6,8 +6,6 @@ class AddTimeSpentToLibraryEntry < ActiveRecord::Migration
   self.disable_ddl_transaction!
 
   def up
-    add_column :library_entries, :time_spent, :integer
-
     say_with_time 'Filling time_spent column' do
       LibraryEntry.by_kind(:anime).joins(:anime)
         .update_in_batches('time_spent = progress * anime.episode_length')
