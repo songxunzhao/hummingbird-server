@@ -52,6 +52,8 @@ module SearchableResource # rubocop:disable Metrics/ModuleLength
       return super(filters, opts) unless should_query?(filters)
       return [] if filters.values.any?(&:nil?)
 
+      raise "Search is disabled"
+
       # Apply scopes and load
       load_query_records(apply_scopes(filters, opts), opts)
     end
