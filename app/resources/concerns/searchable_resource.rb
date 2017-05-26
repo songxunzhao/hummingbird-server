@@ -76,7 +76,14 @@ module SearchableResource # rubocop:disable Metrics/ModuleLength
         include_directives.model_includes, opts)
 
       if @_search_service
-        query.includes(model_includes).to_a
+        results = query.includes(model_includes).to_a
+        Raven.breadcrumbs.record do |crumb|
+          crumb.category = 'results'
+          crumb.data = { results: results }
+          crumb.timestamp = Time.now.to_i
+          crumb.level = :debug
+        end
+        results
       else
         query.load(scope: -> { includes(model_includes) }).to_a
       end
