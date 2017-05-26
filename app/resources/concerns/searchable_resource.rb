@@ -69,7 +69,13 @@ module SearchableResource # rubocop:disable Metrics/ModuleLength
     def load_query_records(query, opts = {})
       include_directives = opts[:include_directives]
       unless include_directives
-        return @_search_service ? query.to_a : query.load.to_a
+        results = @_search_service ? query.to_a : query.load.to_a
+        Raven.breadcrumbs.record do |crumb|
+          crumb.category = 'results'
+          crumb.data = { results: results }
+          crumb.level = :debug
+        end
+        return results
       end
 
       model_includes = resolve_relationship_names_to_relations(self,
@@ -80,6 +86,7 @@ module SearchableResource # rubocop:disable Metrics/ModuleLength
         Raven.breadcrumbs.record do |crumb|
           crumb.category = 'results'
           crumb.data = { results: results }
+          crumb.level = :debug
         end
         results
       else
