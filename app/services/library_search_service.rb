@@ -150,6 +150,7 @@ class LibrarySearchService < SearchService
     _filters[:status] = statuses
     @entries = _filters.except(:kind).compact
                        .reduce(LibraryEntry) { |acc, (key, val)|
+                         p 'REDUCTION', acc.to_sql unless acc == LibraryEntry
                          acc.where(key => val)
                        }
                        .limit(20_000).visible_for(@current_user)
