@@ -130,6 +130,7 @@ class LibrarySearchService < SearchService
     end
     p 'KINDS', media_types
     media_types.map do |kind|
+      puts "#{kind} LOAD", filtered_library_entries.by_kind(kind).to_sql
       [kind, filtered_library_entries.by_kind(kind).pluck("#{kind}_id")]
     end
   end
