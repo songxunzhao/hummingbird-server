@@ -156,5 +156,6 @@ class LibrarySearchService < SearchService
                        }
                        .limit(20_000).visible_for(@current_user)
     puts 'RESULT', @entries.to_sql
+    @entries
   end
 end
