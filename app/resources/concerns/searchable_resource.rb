@@ -80,8 +80,6 @@ module SearchableResource # rubocop:disable Metrics/ModuleLength
         Raven.breadcrumbs.record do |crumb|
           crumb.category = 'results'
           crumb.data = { results: results }
-          crumb.timestamp = Time.now.to_i
-          crumb.level = :debug
         end
         results
       else
