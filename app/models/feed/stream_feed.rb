@@ -35,13 +35,13 @@ class Feed
     end
 
     def follow(feed)
-      instrument('follow', source: client_feed, target: feed) do
+      instrument('follow', feed: self, target: feed) do
         client_feed.follow(feed.group, feed.id)
       end
     end
 
     def unfollow(feed, keep_history: false)
-      instrument('unfollow', source: self, target: feed) do
+      instrument('unfollow', feed: self, target: feed) do
         client_feed.unfollow(feed.group, feed.id, keep_history: keep_history)
       end
     end
@@ -68,6 +68,7 @@ class Feed
     def self.instrument(key, extra = {}, &block)
       ActiveSupport::Notifications.instrument("#{key}.getstream", extra, &block)
     end
+    delegate :instrument, to: :class
 
     private
 
@@ -86,10 +87,6 @@ class Feed
       else
         group
       end
-    end
-
-    def instrument(key, extra = {}, &block)
-      self.class.instrument(key, extra, &block)
     end
   end
 end

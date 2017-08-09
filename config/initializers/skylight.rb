@@ -1,0 +1,1 @@
+require 'skylight/normalizers/getstream'
