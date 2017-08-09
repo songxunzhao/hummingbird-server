@@ -28,6 +28,11 @@ class Feed
         res
       end
 
+      def self.instrument(key, extra = {}, &block)
+        ActiveSupport::Notifications.instrument("#{key}.getstream", extra, &block)
+      end
+      delegate :instrument, to: :class
+
       private
 
       # Apply a list of selects to the list of activities
@@ -67,11 +72,13 @@ class Feed
 
       # Run it through the StreamRails::Enrich process
       def enrich(activities, includes)
-        enricher = StreamRails::Enrich.new(includes)
-        if opts[:aggregated]
-          enricher.enrich_aggregated_activities(activities)
-        else
-          enricher.enrich_activities(activities)
+        Feed::StreamFeed.instrument('enrich', feed: opts[:feed], includes: includes) do
+          enricher = StreamRails::Enrich.new(includes)
+          if opts[:aggregated]
+            enricher.enrich_aggregated_activities(activities)
+          else
+            enricher.enrich_activities(activities)
+          end
         end
       end
 

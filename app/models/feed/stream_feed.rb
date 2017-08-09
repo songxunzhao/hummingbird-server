@@ -66,9 +66,33 @@ class Feed
     end
 
     def self.instrument(key, extra = {}, &block)
-      ActiveSupport::Notifications.instrument("#{key}.getstream", extra, &block)
+      ActiveSupport::Notifications.instrument("#{key}.getstream", extra) do
+        Skylight.instrument(build_skylight_args(key, extra), &block)
+      end
     end
     delegate :instrument, to: :class
+
+    def self.build_skylight_args(action, payload)
+      feed = payload[:feed]
+      target = payload[:target]
+
+      case action
+      when 'follow', 'unfollow'
+        title = "#{action.upcase} #{feed.group} -> #{target.group}"
+        desc = "#{feed.stream_id} -> #{payload[:target].stream_id}"
+      when 'load'
+        title = "#{action.upcase} #{feed.group}"
+        desc = "#{feed.stream_id}: " + YAML.dump(payload[:args])
+      when 'follow_many'
+        title = 'FOLLOW MANY'
+        desc = payload[:follows].map { |f| "#{f[:source]} -> #{f[:target]}" }.join(', ')
+      when 'enrich'
+        title = "#{action.upcase} #{feed.stream_id}"
+        desc = 'includes: ' + payload[:includes].join(',')
+      end
+
+      { title: title, description: desc, category: 'db.getstream' }. tap { |x| p x }
+    end
 
     private
 
