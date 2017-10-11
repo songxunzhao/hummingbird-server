@@ -2,5 +2,6 @@
 # lib/tasks/capistrano.rake, and they will automatically be available to Rake.
 
 require File.expand_path('../config/application', __FILE__)
+require 'librato-rake-deploytrack'
 
 Rails.application.load_tasks
