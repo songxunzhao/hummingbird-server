@@ -123,6 +123,7 @@ end
 
 group :production, :staging do
   gem 'librato-rails' # Metrics
+  gem 'librato-rake-deploytrack' # Deploy tracking in Librato
   gem 'puma_worker_killer'
   gem 'rails_12factor' # Log to stdout, serve assets
   gem 'skylight' # Performance Monitoring
