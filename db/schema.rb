@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180724022853) do
+ActiveRecord::Schema.define(version: 20180810153156) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1334,8 +1334,8 @@ ActiveRecord::Schema.define(version: 20180724022853) do
     t.datetime "created_at",                             null: false
     t.datetime "updated_at",                             null: false
     t.integer  "likes_count",                default: 0, null: false
+    t.integer  "character_id"
     t.string   "media_type",                             null: false
-    t.integer  "character_id",                           null: false
   end
 
   add_index "quotes", ["character_id"], name: "index_quotes_on_character_id", using: :btree
@@ -1617,7 +1617,6 @@ ActiveRecord::Schema.define(version: 20180724022853) do
     t.integer  "reviews_count",                           default: 0,           null: false
     t.inet     "ip_addresses",                            default: [],                       array: true
     t.string   "previous_email"
-    t.integer  "quotes_count",                            default: 0,           null: false
     t.integer  "pinned_post_id"
     t.string   "time_zone"
     t.string   "language"
@@ -1640,6 +1639,7 @@ ActiveRecord::Schema.define(version: 20180724022853) do
     t.string   "ao_facebook_id"
     t.integer  "ao_pro"
     t.string   "ao_imported"
+    t.integer  "quotes_count",                            default: 0,           null: false
   end
 
   add_index "users", ["ao_id"], name: "index_users_on_ao_id", unique: true, using: :btree
@@ -1754,8 +1754,6 @@ ActiveRecord::Schema.define(version: 20180724022853) do
   add_foreign_key "profile_links", "profile_link_sites"
   add_foreign_key "quote_likes", "quotes"
   add_foreign_key "quote_likes", "users"
-  add_foreign_key "quotes", "characters"
-  add_foreign_key "reports", "users"
   add_foreign_key "reports", "users", column: "moderator_id"
   add_foreign_key "reposts", "posts"
   add_foreign_key "reposts", "users"
