@@ -65,6 +65,7 @@ class MediaResource < BaseResource
   has_many :mappings
   has_many :reviews
   has_many :media_relationships
+  has_many :quotes
 
   filter :subtype, apply: ->(records, values, _opts) {
     values = values.map { |v| records.subtypes[v] || v }
